@@ -1,0 +1,30 @@
+[{
+    "perfor111": null,
+    "name111": "\u88d9\u5957\u88dd",
+    "haha": {
+        "categoryId": 111,
+        "name": "Some category name",
+        "eventType": "Category Event",
+        "haha": {
+            "categoryId": 111,
+            "name": "Some category name",
+            "eventType": "Category Event"
+        },
+    },
+    "test" : [111, 222, 333],
+    "aaaa\\": 99999,
+    "ssss": " Any performer name \\", 
+  },
+    {
+        "performerId": 88888,
+        "name": " Second performer name",
+        "category": {
+            "categoryId": 88,
+            "name": "Second Category name",
+            "eventType": "Category Event 2"
+        },
+        "eventType": "Performer Event 2",
+        "url": "http://www.novalidsite.com/somethingelse/performerspage2.html",
+        "priority": 7
+    }
+]
