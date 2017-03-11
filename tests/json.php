@@ -11,7 +11,7 @@ class JsonTest extends PHPUnit_Framework_TestCase
         $sJson_decode->row = 1;
         $sJson_decode->callback = array($this, 'callback');
         $sJson_decode->utf8 = false;
-        //$sJson_decode->debug = true;
+        $sJson_decode->debug = false;
         
         //act
         $sJson_decode->json_decode();

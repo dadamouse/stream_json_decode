@@ -1,10 +1,15 @@
-<?php
+=<?php
 class stream_json_decode
 {
     //
     // file stream
     // 
     private $stream = null;
+
+    //
+    // pop $stream
+    //
+    private $popStream = null; 
 
     //
     // collect match list
@@ -72,8 +77,8 @@ class stream_json_decode
         $data = array();
         if (!empty($this->stream))
         {
-            while (!feof($this->stream)) {
-                $readChar = stream_get_contents($this->stream, 1);
+            while (!self::checkStream()) {
+                $readChar = self::getStream();
 
                 self::printMsg(__FUNCTION__.":".$readChar."\n");
 
@@ -95,8 +100,8 @@ class stream_json_decode
     {
         $data = array();
         $row = 0;
-        while (!feof($this->stream)) {
-            $readChar = stream_get_contents($this->stream, 1);
+        while (!self::checkStream()) {
+            $readChar = self::getStream();
             
             self::printMsg(__FUNCTION__.":".$readChar."\n");
 
@@ -213,8 +218,8 @@ class stream_json_decode
     {
         $str = '';
         $startKey = false;
-        while (!feof($this->stream)) {
-            $readChar = stream_get_contents($this->stream, 1);
+        while (!self::checkStream()) {
+            $readChar = self::getStream();
             
             self::printMsg(__FUNCTION__.":".$readChar."\n");
       
@@ -247,8 +252,8 @@ class stream_json_decode
 
     private function findColon()
     {
-        while (!feof($this->stream)) {
-            $readChar = stream_get_contents($this->stream, 1);
+        while (!self::checkStream()) {
+            $readChar = self::getStream();
             
             self::printMsg(__FUNCTION__.":".$readChar."\n");
             
@@ -281,8 +286,8 @@ class stream_json_decode
         $prevChar = '';
         $prevPrevChar = '';
 
-        while (!feof($this->stream)) {
-            $readChar = stream_get_contents($this->stream, 1);
+        while (!self::checkStream()) {
+            $readChar = self::getStream();
 
             self::printMsg(__FUNCTION__.":".$readChar."\n");
 
@@ -372,11 +377,11 @@ class stream_json_decode
                         // null
                         //                        
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
                         if ($str == 'null')
                         {
@@ -391,11 +396,11 @@ class stream_json_decode
                         // true
                         //                        
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
                         if ($str == 'true')
                         {
@@ -410,11 +415,11 @@ class stream_json_decode
                         // false
                         //                        
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
-                        $readChar = stream_get_contents($this->stream, 1);
+                        $readChar = self::getStream();
                         $str .= $readChar;
                         if ($str == 'false')
                         {
@@ -601,4 +606,30 @@ class stream_json_decode
     {
         throw new Exception($msg);
     }
+
+    public function getStream()
+    {
+        while (empty($this->popStream))
+        {
+
+            $str = stream_get_contents($this->stream, 100);
+            
+            $this->popStream = str_split($str);
+        }
+
+        $popStream = array_shift($this->popStream);
+        return $popStream;
+    }
+
+    public function checkStream()
+    {
+        $isEnd = true;
+        if (!feof($this->stream) || !empty($this->popStream))
+        {
+            $isEnd = false;
+        }
+        return $isEnd;
+    }
 }
+
+
