@@ -1,4 +1,4 @@
-=<?php
+<?php
 class stream_json_decode
 {
     //
@@ -283,8 +283,7 @@ class stream_json_decode
         $startArray = false;
         $arrayData = array();
         $isDigit = false;
-        $prevChar = '';
-        $prevPrevChar = '';
+        $escapeFlag = false;
 
         while (!self::checkStream()) {
             $readChar = self::getStream();
@@ -331,7 +330,7 @@ class stream_json_decode
                 if (self::delMatch($readChar, 'value'))
                 {
                     //escape
-                    if ($prevChar == '\\' && $prevPrevChar != '\\')
+                    if ($escapeFlag)
                     {
                         self::addMatch($readChar, 'value');
                         $str .= $readChar;
@@ -435,8 +434,14 @@ class stream_json_decode
                 }
             }
 
-            $prevPrevChar = $prevChar;
-            $prevChar = $readChar;
+            if (!$escapeFlag && $readChar == '\\')
+            {
+                $escapeFlag = true; 
+            }
+            else
+            {
+                $escapeFlag = false;
+            }
         }
 
         self::throwException(__FUNCTION__.":opps invalid json string");
